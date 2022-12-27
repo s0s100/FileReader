@@ -9,13 +9,14 @@ class FileReader : public File
 {
 private:
 	const unsigned char SPACE_NUMBER = 32;
-	const char* filePath;
-	std::mutex mutex_;
+	std::string filePath;
+	std::mutex mutexLock;
 	
 public:
 	FileReader(const char* filePath, std::shared_ptr<std::vector<std::string>> specialWords);
 	~FileReader(void);
 	bool isAvailable();
 	void readFile();
+	void testReadFile(std::string threadName);
 	std::string getCalculations();
 };

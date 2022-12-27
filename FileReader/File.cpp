@@ -15,7 +15,7 @@ bool File::compare(std::pair<std::string, int>& pair1,
 	return false;
 }
 
-void File::addWord(std::string newWord) {
+void File::addWord(std::string newWord) {	
 	auto foundPair = wordMap.find(newWord);
 	if (foundPair != wordMap.end()) {
 		foundPair->second++;
@@ -109,4 +109,8 @@ std::string File::getCalculations() const {
 	}
 
 	return output;
+}
+
+void File::emptyWordMap() {
+	wordMap.clear();
 }

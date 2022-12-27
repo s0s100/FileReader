@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include "Options.h"
 
 // Stores data from read file as a sorted map
 class File
@@ -24,6 +25,7 @@ private:
 
 protected:
 	void addWord(std::string newWord);
+	void emptyWordMap();
 	virtual std::string getCalculations() const;
 
 public:

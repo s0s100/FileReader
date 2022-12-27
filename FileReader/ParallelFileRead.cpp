@@ -1,10 +1,9 @@
-#include <filesystem>
 #include <iostream>
-#include <thread>
-#include <future>
 #include "ParallelFileRead.h"
 
-ParallelFileRead::ParallelFileRead(std::vector<std::string> specialWords) : specialWords(specialWords) {}
+ParallelFileRead::ParallelFileRead(std::vector<std::string> specialWords) : specialWords(specialWords) {
+	toLowerCase(this->specialWords);
+}
 
 ParallelFileRead::~ParallelFileRead(void) {}
 
@@ -25,37 +24,40 @@ std::vector<std::filesystem::path> ParallelFileRead::findReadableFiles(const cha
 	return foundObjects;
 }
 
-void ParallelFileRead::readFile(const char * path) {
+void ParallelFileRead::addFileReader(const char * path) {
 	std::shared_ptr<std::vector<std::string>> specialWordsPointer = 
 		std::make_shared<std::vector<std::string>>(specialWords);
 	std::shared_ptr<FileReader> newFileReader = 
 		std::make_shared<FileReader>(path, specialWordsPointer);
-
-	newFileReader.get()->readFile();
-
-	/*std::thread newThread(&FileReader::readFile, newFileReader.get());
-	newThread.join();*/
-
 	fileReaders.push_back(newFileReader);
 }
 
-void ParallelFileRead::readFolderFiles(const char* path) {
+void ParallelFileRead::readFiles() {
+	std::vector<std::thread> threads;
+	for (auto& fileReaderPointer : fileReaders) {
+		std::thread newThread(&FileReader::readFile,fileReaderPointer.get());
+		threads.push_back(std::move(newThread));
+	}
+
+	for (auto& thread : threads) {
+		if (thread.joinable()) {
+			thread.join();
+		}
+	}
+}
+
+void ParallelFileRead::findAllFiles(const char* path) {
 	std::vector<std::filesystem::path> filePaths = findReadableFiles(path);
 
 	for (const auto& entry : filePaths) {
-		std::cout << "Checking file: " << entry << std::endl;
 
 		if (entry.extension().string() == "") {
-			std::cout << "It is a folder" << std::endl;
 
-			 readFolderFiles(entry.string().c_str());
+			 findAllFiles(entry.string().c_str());
 		} else if (entry.extension().string() == REQUIRED_FORMAT) {
-			std::cout << "It is a required format" << std::endl;
 
-			 readFile(entry.string().c_str());
+			 addFileReader(entry.string().c_str());
 		}
-		
-		std::cout << std::endl;
 	}
 }
 
@@ -66,8 +68,17 @@ size_t ParallelFileRead::getFileCount() const {
 std::string ParallelFileRead::getFileCalculations() {
 	std::string output = "";
 	for (auto& fileReaderPointer : fileReaders) {
+		output += "-------------------------\n";
 		output += fileReaderPointer.get()->getCalculations();
+		output += "-------------------------\n";
 	}
 
 	return output;
+}
+
+void ParallelFileRead::toLowerCase(std::vector<std::string>& words) {
+	for (std::string& word : words) {
+		std::transform(word.begin(), word.end(), word.begin(),
+			[](unsigned char c) { return std::tolower(c); });
+	}
 }

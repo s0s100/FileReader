@@ -27,26 +27,33 @@
 #include <iostream>
 #include "ParallelFileRead.h"
 
-void printSymbols() {
-    // 65 - 90 : A - Z
-    // 97 -122 : a - z
-    // 48 - 57 : 0 - 9
-
-    unsigned char c;
-    for (unsigned int i = 0; i <= 256; i++) {
-        c = i;
-        std::cout << i << ": " << c << "\n";
+int consoleRead(int argc, char* argv[]) {
+    if (argc < 2) {
+        return 1;
     }
-}
 
-// Testing application
-int main()
-{
-    const char* folderPath = "Files";
-    std::vector<std::string> specialWords = { "a", "test" };
+    // Get path
+    const char * folderPath = argv[1];
+    
+    // Get special words
+    std::vector<std::string> specialWords;
+    for (unsigned int i = 2; i < argc; i++) {
+        specialWords.push_back(argv[i]);
+    }
+
     ParallelFileRead parallelFileReader(specialWords);
-    parallelFileReader.readFolderFiles(folderPath);
+    parallelFileReader.findAllFiles(folderPath);
+
+    parallelFileReader.readFiles();
 
     std::cout << "Number of files found: " << parallelFileReader.getFileCount() << std::endl;
     std::cout << parallelFileReader.getFileCalculations() << std::endl;
+
+    return 0;
+}
+
+// Testing application
+int main(int argc, char** argv)
+{
+    consoleRead(argc, argv);
 }
