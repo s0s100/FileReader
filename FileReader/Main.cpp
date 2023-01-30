@@ -1,29 +1,3 @@
-/**
-*   Part 1.
-* Design, create and test a C++ console application. The application should:
-* Read all files in a specified folder (assume they are ascii).
-* For each file, ascertain:
-*  - The longest word
-*  - The shortest word
-*  - The total word count
-*  - The number of occurrences of one or more specified words.
-* Produce a design, including a simple class diagram – use Powerpoint
-* Explain how it was (or could be tested) – again use Powerpoint
-* The implementation should demonstrate, as far as possible:
-*  - Abstraction
-*  - Inheritance
-*  - Use of the C++ standard library, including smart pointers, and if possible lambdas.
-*
-*   Part 2.
-* Extend the application to scan the subfolders from a specified location (and nested sub folders).
-* Consideration should be given to:
-*  - Performance
-*  - Scalability
-*  - Feedback and Instrumentation (logging of progress)
-*
-* Document any design and implementation decisions in your Presentation. Try to keep this artefact as simple and coherent as possible.
-**/
-
 #include <iostream>
 #include "ParallelFileRead.h"
 
