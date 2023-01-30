@@ -21,7 +21,7 @@ public:
 	size_t getFileCount() const;
 	// Find all files of required format and fill file reader array
 	void findAllFiles(const char* path);
-	// Get reading result for each file found
+	// Calculate results for each file found and return string with results
 	std::string getFileCalculations();
 	// Read files and store the data in the file reader
 	void readFiles();

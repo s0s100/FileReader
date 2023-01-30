@@ -27,6 +27,8 @@
 #include <iostream>
 #include "ParallelFileRead.h"
 
+// Reads arguments from the main function and created parallel file 
+// reader to access files in the folder
 int consoleRead(int argc, char* argv[]) {
     if (argc < 2) {
         return 1;
